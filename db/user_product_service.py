@@ -63,3 +63,9 @@ class UserProductService:
         inserting_user = insert(UserProduct).values(user_telegram_id=telegram_id, product_id=product.id,
                                                     start_price=product.price, alert_threshold=0)
         session.execute(inserting_user)
+
+    @session_decorator
+    def get_users_of_product(self, number, session: Session):
+        user_products = session.query(UserProduct).join(Product).filter_by(number=number).all()
+        session.expunge_all()
+        return user_products
