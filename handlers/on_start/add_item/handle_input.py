@@ -1,46 +1,42 @@
-#При нажатии на кнопку “Добавить товар” бот присылает сообщение с просьбой отправить артикул товара.
+# При нажатии на кнопку “Добавить товар” бот присылает сообщение с просьбой отправить артикул товара.
 # Также появляется кнопка в клавиатуре “Назад” (при нажатии на которую бот возвращается в главное меню)
 # Хендлер, который срабатывает на добавить товар.
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message
 
-class Form(StatesGroup):
-    articul_input = State()
-
+import keyboards
+import utils
+from form import Form
 
 add_item_router = Router()
 
-@add_item_router.message(F.text.casefold() == "q")
-async def hello(message: Message, state: FSMContext):
-    await state.set_state(Form.articul_input)
-    #Просим отправить артикул товара, рисуем кнопку назад
-    await message.reply("Hello! How can I help you today?")
 
-
-@add_item_router.message(Form.articul_input)
+@add_item_router.message(Form.articul)
 async def process_name(message: Message, state: FSMContext) -> None:
-    if validateArticul():
-        if existInAPI():
-            if item_in_bd():
-                if user_already_have_its_item():
-                    write_about_that
+    await state.update_data(articul=message.text)
+
+    if utils.validateArticul():
+        if utils.existInAPI():
+            await state.set_state(Form.menu)
+            if utils.item_in_bd():
+                if utils.user_already_have_its_item():
+                    await message.answer(f"есть такой артикул!")
                 else:
-                    add_user_item_bd(last_price)
-                    #прислать карточку
-                    #успешно выйти в главное меню
+                    await message.answer(f"Товар успешно добавлен!")
+                    # прислать карточку
+                    # успешно выйти в главное меню
             else:
-                add_item_in_bd()
-                add_user_item_bd(last_price)
-                #прислать карточку
+                await message.answer(f"Товар успешно добавлен!")
+                # прислать карточку
                 # успешно выйти в главное меню
         else:
-            #товара не существует попробуйте снова (снова кнопку назад делаем)
+            await state.set_state(Form.articul)
+            await message.answer(f"Товара не существует попробуйте снова!",
+                                 reply_markup=keyboards.return_to_menu_kb)
+    # товара не существует попробуйте снова (снова кнопку назад делаем)
     else:
-        #Артикул некорректнет, попробуйте снова (снова кнопку назад делаем)
-
-
-
-
-    await state.clear()
+        await state.set_state(Form.articul)
+        await message.answer(f"Артикул некорректен, попробуйте снова!",
+                             reply_markup=keyboards.return_to_menu_kb)
+    # Артикул некорректнет, попробуйте снова (снова кнопку назад делаем)
