@@ -4,29 +4,28 @@ import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
+from sqlalchemy import create_engine
 
 import config
-from handlers.on_start.add_item.handle_input import add_item_router
-from handlers.on_start.add_item.input_item import input_item_router
-from handlers.on_start.add_item.back import back_from_add_item
-from handlers.on_start.items.change_notify.change_notify import update_treshhold_router
-from handlers.on_start.items.change_notify.change_notify_options import update_treshhold_options_router
-from handlers.on_start.items.change_price_to_last import change_price_router
-from handlers.on_start.items.items import my_items_router
-from handlers.on_start.items.price_diagram.price_diagram import price_diagram_router
-from handlers.on_start.items.stop_tracking import stop_tracking_router
-from handlers.start import on_start_router
+
+import handlers
+from api import api_service
+from middleware.service_middleware import ServiceMiddleware
 
 TOKEN = config.TOKEN
-print(TOKEN)
 
+DATABASE_URL = f"postgresql://dyvawvhc:{config.bd_pass}@trumpet.db.elephantsql.com/dyvawvhc"
+
+engine = create_engine(DATABASE_URL)
+
+service_middleware = ServiceMiddleware(engine)
+handlers.router.message.middleware(service_middleware)
+handlers.router.callback_query.middleware(service_middleware)
 
 async def main():
     bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
     dp = Dispatcher()
-    dp.include_routers(on_start_router, my_items_router, input_item_router, back_from_add_item,
-                       stop_tracking_router, add_item_router, change_price_router, update_treshhold_router,
-                       update_treshhold_options_router, price_diagram_router)
+    dp.include_routers(handlers.router)
 
     await dp.start_polling(bot)
 
