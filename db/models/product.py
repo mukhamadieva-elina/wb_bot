@@ -1,15 +1,19 @@
+from typing import List
+
 from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, mapped_column
+from sqlalchemy.orm import Mapped
 from .base import Base
+
+
 
 class Product(Base):
     __tablename__ = 'Product'
 
-    id = Column(Integer, primary_key=True)
-    number = Column(Integer, nullable=False, unique=True)
-    title = Column(String, nullable=False)
-    availability = Column(Boolean, nullable=False)
-    price = Column(Float, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    number: Mapped[int] = mapped_column(nullable=False, unique=True)
+    title: Mapped[str] = mapped_column(nullable=False)
+    availability: Mapped[bool] = mapped_column(nullable=False)
+    price: Mapped[float] = mapped_column(nullable=False)
 
-    # Связь с User_Product
-    users = relationship("UserProduct", back_populates="product")
+    users: Mapped[List["User"]] = relationship(secondary="User_Product", back_populates="products")
