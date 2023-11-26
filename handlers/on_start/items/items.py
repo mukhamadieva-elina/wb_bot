@@ -4,28 +4,34 @@ from aiogram.types import Message, InputFile
 from aiogram.utils.markdown import hide_link
 
 import keyboards
+from api import api_service
+from db.product_service import ProductService
+from db.user_service import UserService
 from form import Form
+from api.models.item_info import get_card
 
-my_items_router = Router()
+from handlers.router import router
 
 
-@my_items_router.message(Form.menu, F.text.casefold() == '🛍 мои товары')
-async def my_items(message: Message, state: FSMContext) -> None:
-    await state.set_state(Form.menu)
-    my_items = get_items(message.from_user.id)
-    if my_items is None:
+def get_items(user_id, user_service: UserService):
+    # Запрос к базе
+    return user_service.get_user_products(user_id)
+
+
+@router.message(Form.menu, F.text.casefold() == '🛍 мои товары')
+async def my_items(message: Message, user_service: UserService) -> None:
+    my_items = get_items(message.from_user.id, user_service)
+    if not my_items:
         await message.answer(
             'Вы еще ничего не добавили'
         )
     else:
         for item in my_items:
+            info, kb = get_card(api_service.get_image(int(item.Product.number)), item.Product.availability,
+                                item.Product.title,
+                                item.UserProduct.start_price, item.Product.price,
+                                item.Product.price - item.UserProduct.start_price, item.UserProduct.alert_threshold)
             await message.answer(
-                f"{hide_link('https://basket-09.wb.ru/vol1220/part122051/122051672/images/big/1.webp')}"
-                f"{item}",
-                reply_markup=keyboards.item_card_available_kb
+                info,
+                reply_markup=kb(item.Product.number)
             )
-
-
-def get_items(user_id):
-    # Запрос к базе
-    return ["Телефон хайповый", "гусь обнимусь"]
