@@ -2,16 +2,14 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
+from db.user_service import UserService
 from form import Form
 
-change_price_router = Router()
+from handlers.router import router
 
 
-@change_price_router.callback_query(F.data == 'update_tracking')
-async def update_tracking_price(callback: CallbackQuery):
-    change_price_to_last()
+@router.callback_query(F.data.startswith('update_tracking'))
+async def update_tracking_price(callback: CallbackQuery, user_service: UserService):
+    number = callback.data.split('update_tracking_')[1]
+    user_service.patch_start_price(callback.from_user.id, number)
     await callback.answer('Цена успешно изменена')
-
-
-def change_price_to_last():
-    pass

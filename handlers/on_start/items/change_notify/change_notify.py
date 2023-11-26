@@ -4,7 +4,10 @@ from aiogram.types import CallbackQuery
 
 import keyboards
 
-update_treshhold_router = Router()
-@update_treshhold_router.callback_query(F.data == 'update_treshhold')
+from handlers.router import router
+
+
+@router.callback_query(F.data.startswith('update_treshhold'))
 async def update_treshhold(callback: CallbackQuery):
-    await callback.message.edit_text('Выберите порог оповещения', reply_markup=keyboards.update_treshhold_kb)
+    number = callback.data.split('update_treshhold_')[1]
+    await callback.message.edit_text('Выберите порог оповещения', reply_markup=keyboards.update_treshhold_kb(number))
