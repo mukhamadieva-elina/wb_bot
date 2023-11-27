@@ -14,6 +14,17 @@ class ProductService:
         self.session = sessionmaker(bind=engine, class_=AsyncSession)
 
     @session_decorator
+    async def patch_product(self, session, number=None, price=None, aval=None):
+        print("patch_product price:", price)
+        query = select(Product).filter_by(number=number)
+        result = await session.execute(query)
+        product = result.first()
+        if price is not None:
+            product.Product.price = price
+        if aval is not None:
+            product.Product.availability = aval
+
+    @session_decorator
     async def product_exists_by_number(self, number, session):
         query = select(Product).filter_by(number=number)
         result = await session.execute(query)
@@ -62,8 +73,7 @@ class ProductService:
         return products
 
     @session_decorator
-    async def get_users_of_product(self, number, session: Session):
-        print("lknkjn")
+    async def get_user_products_by_product(self, number, session: Session):
         query = select(UserProduct).join(Product).filter_by(number=number)
         result = await session.execute(query)
         user_products = result.all()
