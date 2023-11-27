@@ -29,15 +29,16 @@ async def process_name(message: Message, state: FSMContext, product_service: Pro
         exists = await utils.exist_in_api(number)
         if exists:
             await state.set_state(Form.menu)
-            product = product_service.get_product(number)
+            product = await product_service.get_product(number)
             if product:
-                if user_service.user_product_exists_by_number(user_id, product.number):
+                if await user_service.user_product_exists_by_number(user_id, product.Product.number):
                     await message.answer(f"Вы уже отслеживаете этот товар!", reply_markup=keyboards.menu_kb)
                 else:
-                    user_service.add_user_product(user_id, number, product_service)
+                    await user_service.add_user_product(user_id, number, product_service)
                     await message.answer(f"Товар успешно добавлен!", reply_markup=keyboards.menu_kb)
-                    info, kb = get_card(api_service.get_image(int(number)), product.availability, product.title,
-                                        product.price, product.price, 0, 0)
+                    info, kb = get_card(api_service.get_image(int(number)), product.Product.availability,
+                                        product.Product.title,
+                                        product.Product.price, product.Product.price, 0, 0)
                     await message.answer(
                         info,
                         reply_markup=kb(number)
@@ -51,9 +52,9 @@ async def process_name(message: Message, state: FSMContext, product_service: Pro
                     if len(size['stocks']):
                         availability = True
                         break
-                product_service.add_product(number, product_from_api[0]['name'], availability,
-                                            product_from_api[0]['salePriceU'] / 100)
-                user_service.add_user_product(user_id, number, product_service)
+                await product_service.add_product(number, product_from_api[0]['name'], availability,
+                                                  product_from_api[0]['salePriceU'] / 100)
+                await user_service.add_user_product(user_id, number, product_service)
                 await message.answer(f"Товар успешно добавлен!")
                 info, kb = get_card(api_service.get_image(int(number)), availability, product_from_api[0]['name'],
                                     product_from_api[0]['salePriceU'] / 100,
