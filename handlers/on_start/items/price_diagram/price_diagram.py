@@ -23,7 +23,7 @@ async def price_diagram(callback: CallbackQuery):
     # message = await bot.send_document(chat_id=callback.from_user.id, document=plot, disable_notification=True)
     if url:
         await callback.message.edit_text(f'{hide_link(url)}График изменения цены товара',
-                                     reply_markup=keyboards.return_to_card_item_kb(number))
+                                         reply_markup=keyboards.return_to_card_item_kb(number))
     else:
         await callback.message.edit_text(f'График изменения цены товара недоступен',
                                          reply_markup=keyboards.return_to_card_item_kb(number))
@@ -36,10 +36,12 @@ async def get_diagram(number):
     for elem in response:
         dt.append(datetime.fromtimestamp(elem['dt']))
         price.append(elem['price']['RUB'] / 100)
+    if not len(dt):
+        return None
     fig, ax = plt.subplots(nrows=1, ncols=1)
     ax.plot(dt, price)
     img = BytesIO()
-    fig.savefig(img, format='png')
+    fig.savefig(img, format='webp')
     url = await upload_image_to_service(img, config.api_key)
     return url
 
@@ -65,7 +67,7 @@ async def upload_image_to_service(image_data, api_key):
 
                 # Проверка на успешную загрузку
                 if data['status'] == 200:
-                    image_url = data['data']['url']
+                    image_url = data['data']['image']['url']
                     return image_url
                 else:
                     print('Ошибка при загрузке изображения:', data['error']['message'])
