@@ -1,4 +1,5 @@
-from sqlalchemy import insert
+from sqlalchemy import insert, select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker, Session
 
 from db.dto.ProductUpdateDto import ProductUpdateDto
@@ -9,29 +10,27 @@ from db.utils import session_decorator, session_decorator_nested
 class ProductService:
 
     def __init__(self, engine):
-        self.session = sessionmaker(bind=engine)
+        self.session = sessionmaker(bind=engine, class_=AsyncSession)
 
     @session_decorator
-    def product_exists_by_number(self, number, session):
-        product = session.query(Product).filter_by(number=number).first()
+    async def product_exists_by_number(self, number, session):
+        query = select(Product).filter_by(number=number)
+        result = await session.execute(query)
+        product = result.first()
         return product is not None
 
-    @session_decorator_nested
-    def get_product(self, number, session: Session):
-        product = session.query(Product).filter_by(number=number).first()
+    @session_decorator
+    async def get_product(self, number, session: Session):
+        query = select(Product).filter_by(number=number)
+        result = await session.execute(query)
+        product = result.first()
         session.expunge_all()
         return product
 
     @session_decorator_nested
-    def get_all_product(self, session: Session):
-        products = session.query(Product).all()
-        session.expunge_all()
-        return products
-
-    @session_decorator_nested
-    def patch_product(self, number, product_update: ProductUpdateDto, session):
+    async def patch_product(self, number, product_update: ProductUpdateDto, session):
         # product = session.query(Product).filter_by(number=number).first()
-        product = self.get_product(number, session=session)
+        product = await self.get_product(number, session=session)
         if not product:
             raise Exception
         for attr in vars(product_update).keys():
@@ -41,8 +40,8 @@ class ProductService:
                 setattr(product, attr, value)
 
     @session_decorator
-    def add_product(self, number, title, availability, price, session: Session):
-        if not self.product_exists_by_number(number):
+    async def add_product(self, number, title, availability, price, session: Session):
+        if not await self.product_exists_by_number(number):
             inserting_product = insert(Product).values(number=number, title=title, availability=availability,
                                                        price=price)
-            session.execute(inserting_product)
+            await session.execute(inserting_product)

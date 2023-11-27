@@ -5,6 +5,8 @@ import sys
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+
 
 import config
 
@@ -14,19 +16,19 @@ from middleware.service_middleware import ServiceMiddleware
 
 TOKEN = config.TOKEN
 
-DATABASE_URL = f"postgresql://dyvawvhc:{config.bd_pass}@trumpet.db.elephantsql.com/dyvawvhc"
+DATABASE_URL = f"postgresql+asyncpg://dyvawvhc:{config.bd_pass}@trumpet.db.elephantsql.com/dyvawvhc"
 
-engine = create_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL)
 
 service_middleware = ServiceMiddleware(engine)
 handlers.router.message.middleware(service_middleware)
 handlers.router.callback_query.middleware(service_middleware)
 
-async def main():
-    bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
-    dp = Dispatcher()
-    dp.include_routers(handlers.router)
+bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
+dp = Dispatcher()
 
+async def main():
+    dp.include_routers(handlers.router)
     await dp.start_polling(bot)
 
 
