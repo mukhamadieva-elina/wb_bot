@@ -1,6 +1,9 @@
+import asyncio
+
 from api.api_service import get_product
 
 from db.dto.ProductUpdateDto import ProductUpdateDto
+from db.models.product import Product
 from db.product_service import ProductService
 
 import time
@@ -26,21 +29,24 @@ async def check_availability(item_art):
         return availability
 
 
-async def update(message, product_service: ProductService, freq=60):
+async def update(message, product_service: ProductService, freq=3):
+    print("тут")
     while True:
-        products_from_bd = product_service.get_all_product()  ##продукты из бд
+        products_from_bd = await product_service.get_all_product()  ##продукты из бд
         for product in products_from_bd:
-            product_art, product_price, product_avail = product.number, product.price, product.availability
+            product_art, product_price, product_avail = product.Product.number, product.Product.price, product.Product.availability
+            print(product_art)
             availability_from_api = await check_availability(product_art)
             price_from_api = await check_price_change(product_art)
             if product_price != price_from_api:
+                print("456")
                 new_product = ProductUpdateDto(price=price_from_api)
-                product_service.patch_product(product_art, new_product)
-                notifier.notify(product_art, price_from_api, product_service, message)
+                await product_service.patch_product(product_art, new_product)
+                await notifier.notify(product_art, price_from_api, product_service, message)
             if product_avail != availability_from_api:
                 new_product = ProductUpdateDto(availability=availability_from_api)
-                product_service.patch_product(product_art, new_product)
-                notifier.notify_avail(product_art, availability_from_api, product_service, message)
-        time.sleep(freq)
+                await product_service.patch_product(product_art, new_product)
+                await notifier.notify_avail(product_art, availability_from_api, product_service, message)
+        #time.sleep(freq)
         print("updating")
-
+        await asyncio.sleep(freq)
