@@ -52,13 +52,16 @@ async def process_name(message: Message, state: FSMContext, product_service: Pro
                     if len(size['stocks']):
                         availability = True
                         break
-                await product_service.add_product(number, product_from_api[0]['name'], availability,
-                                                  product_from_api[0]['salePriceU'] / 100)
+                if availability:
+                    price = product_from_api[0]['salePriceU'] / 100
+                else:
+                    price = -1
+                await product_service.add_product(number, product_from_api[0]['name'], availability, price)
                 await user_service.add_user_product(user_id, number, product_service)
                 await message.answer(f"Товар успешно добавлен!")
                 info, kb = get_card(api_service.get_image(int(number)), availability, product_from_api[0]['name'],
-                                    product_from_api[0]['salePriceU'] / 100,
-                                    product_from_api[0]['salePriceU'] / 100, 0, 0)
+                                    price,
+                                    price, 0, 0)
                 await message.answer(
                     info,
                     reply_markup=kb(number)
