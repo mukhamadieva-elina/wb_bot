@@ -1,24 +1,52 @@
-from notifier import Notifier
-from typing import TypedDict
+import asyncio
 
-class Item(TypedDict):
-    art: str
-    last_price: int
+from api.api_service import get_product
 
+from db.dto.ProductUpdateDto import ProductUpdateDto
+from db.models.product import Product
+from db.product_service import ProductService
 
-class ItemsChecker():
-    def __int__(self, notifier: Notifier):
-        self.items : list[Item] = []
-        self.notifier = notifier
+import time
 
-    def check_items(self, freq=60*5):
-        for item in self.items:
-            item_art, last_price = item["art"], item["last_val"]
-            new_price = check_price_change(item_art, last_price)
-            if new_price:
-                self.notifier.notify(item_art, new_price)
-
-    def update(self):
-        pass
+from services import notifier
 
 
+async def check_price_change(item_art):
+    history = await get_product(item_art)
+    if history:
+        price = history[0]['salePriceU'] / 100
+        return price
+
+
+async def check_availability(item_art):
+    history = await get_product(item_art)
+    if history:
+        availability = False
+        for size in history[0]['sizes']:
+            if len(size['stocks']):
+                availability = True
+                break
+        return availability
+
+
+async def update(message, product_service: ProductService, freq=3):
+    print("тут")
+    while True:
+        products_from_bd = await product_service.get_all_product()  ##продукты из бд
+        for product in products_from_bd:
+            product_art, product_price, product_avail = product.Product.number, product.Product.price, product.Product.availability
+            print(product_art)
+            availability_from_api = await check_availability(product_art)
+            price_from_api = await check_price_change(product_art)
+            if product_price != price_from_api:
+                print("456")
+                new_product = ProductUpdateDto(price=price_from_api)
+                await product_service.patch_product(product_art, new_product)
+                await notifier.notify(product_art, price_from_api, product_service, message)
+            if product_avail != availability_from_api:
+                new_product = ProductUpdateDto(availability=availability_from_api)
+                await product_service.patch_product(product_art, new_product)
+                await notifier.notify_avail(product_art, availability_from_api, product_service, message)
+        #time.sleep(freq)
+        print("updating")
+        await asyncio.sleep(freq)

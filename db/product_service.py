@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from db.dto.ProductUpdateDto import ProductUpdateDto
 from db.models.product import Product
+from db.models.user_product import UserProduct
 from db.utils import session_decorator, session_decorator_nested
 
 
@@ -29,6 +30,7 @@ class ProductService:
 
     @session_decorator_nested
     async def patch_product(self, number, product_update: ProductUpdateDto, session):
+        print("patch")
         # product = session.query(Product).filter_by(number=number).first()
         product = await self.get_product(number, session=session)
         if not product:
@@ -45,3 +47,21 @@ class ProductService:
             inserting_product = insert(Product).values(number=number, title=title, availability=availability,
                                                        price=price)
             await session.execute(inserting_product)
+
+    @session_decorator_nested
+    async def get_all_product(self, session: Session):
+        query = select(Product)
+        result = await session.execute(query)
+        products = result.all()
+        session.expunge_all()
+        return products
+
+    @session_decorator
+    async def get_users_of_product(self, number, session: Session):
+        print("lknkjn")
+        query = select(UserProduct).join(Product).filter_by(number=number)
+        result = await session.execute(query)
+        user_products = result.all()
+        session.expunge_all()
+        print(user_products)
+        return user_products
