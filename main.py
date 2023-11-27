@@ -24,6 +24,7 @@ service_middleware = ServiceMiddleware(engine)
 handlers.router.message.middleware(service_middleware)
 handlers.router.callback_query.middleware(service_middleware)
 product_service = service_middleware.product_service
+user_service = service_middleware.user_service
 
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
@@ -33,7 +34,7 @@ async def regular_update():
     i = 0
     while True:
         print(f"main")
-        await items_checker.update(bot, product_service)
+        await items_checker.update(bot, product_service, user_service)
 
 
 async def main():
