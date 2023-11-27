@@ -63,7 +63,6 @@ class ProductService:
 
     @session_decorator
     async def get_users_of_product(self, number, session: Session):
-        print("lknkjn")
         query = select(UserProduct).join(Product).filter_by(number=number)
         result = await session.execute(query)
         user_products = result.all()

@@ -1,6 +1,7 @@
 import asyncio
 from api.api_service import get_product
 from db.product_service import ProductService
+from db.user_service import UserService
 from services import notifier
 
 
@@ -22,7 +23,7 @@ async def check_availability(item_art):
         return availability
 
 
-async def update(message, product_service: ProductService, freq=180):
+async def update(message, product_service: ProductService, user_service: UserService, freq=180):
     while True:
         products_from_bd = await product_service.get_all_product()  ##продукты из бд
         for product in products_from_bd:
@@ -32,9 +33,9 @@ async def update(message, product_service: ProductService, freq=180):
             price_from_api = await check_price_change(product_art)
             if product_price != price_from_api:
                 await product_service.patch_product_price(product_art, price_from_api)
-                await notifier.notify(product_art, price_from_api, product_service, message)
+                await notifier.notify(product_art, price_from_api, product_service, message, user_service)
             if product_avail != availability_from_api:
                 await product_service.patch_product_availability(product_art, availability_from_api)
-                await notifier.notify_avail(product_art, availability_from_api, product_service, message)
+                await notifier.notify_avail(product_art, availability_from_api, product_service, message, user_service)
         print("updating")
         await asyncio.sleep(freq)
