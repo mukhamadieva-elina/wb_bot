@@ -27,8 +27,10 @@ handlers.router.callback_query.middleware(service_middleware)
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
 
+
 async def main():
     dp.include_routers(handlers.router)
+
     await dp.start_polling(bot)
 
 

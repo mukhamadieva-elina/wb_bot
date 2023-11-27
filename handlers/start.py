@@ -16,10 +16,10 @@ from handlers.router import router
 async def command_start(message: Message, state: FSMContext, user_service: UserService) -> None:
     # После команды запуска бота должны отображаться справочная информация и кнопки в клавиатуре(reply Markup):
     # мои товары, добавить товар, помощь, обратиться в поддержку
-    await state.set_state(Form.menu)
+    # await state.set_state(Form.menu)
     id_user = message.from_user.id
-    if not user_service.get_user(id_user):
-        user_service.add_user(id_user)
+    if not await user_service.get_user(id_user):
+        await user_service.add_user(id_user)
     await message.answer(
         utils.info,
         reply_markup=keyboards.menu_kb,
