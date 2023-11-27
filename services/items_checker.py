@@ -22,8 +22,7 @@ async def check_availability(item_art):
         return availability
 
 
-async def update(message, product_service: ProductService, freq=3):
-    print("тут")
+async def update(message, product_service: ProductService, freq=180):
     while True:
         products_from_bd = await product_service.get_all_product()  ##продукты из бд
         for product in products_from_bd:
@@ -34,10 +33,8 @@ async def update(message, product_service: ProductService, freq=3):
             if product_price != price_from_api:
                 await product_service.patch_product_price(product_art, price_from_api)
                 await notifier.notify(product_art, price_from_api, product_service, message)
-                print("ФФЫВУЙКП45СП4Р5ТНРОИАВСЫЧНЕИВПАМВ")
             if product_avail != availability_from_api:
                 await product_service.patch_product_availability(product_art, availability_from_api)
                 await notifier.notify_avail(product_art, availability_from_api, product_service, message)
-        #time.sleep(freq)
         print("updating")
         await asyncio.sleep(freq)
