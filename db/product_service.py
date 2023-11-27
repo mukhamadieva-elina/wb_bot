@@ -29,17 +29,22 @@ class ProductService:
         return product
 
     @session_decorator_nested
-    async def patch_product(self, number, product_update: ProductUpdateDto, session):
+    async def patch_product_availability(self, number, availability, session):
         print("patch")
-        # product = session.query(Product).filter_by(number=number).first()
-        product = await self.get_product(number, session=session)
-        if not product:
-            raise Exception
-        for attr in vars(product_update).keys():
-            value = getattr(product_update, attr)
-            print("value", value)
-            if value is not None:
-                setattr(product, attr, value)
+        query = select(Product).filter_by(number=number)
+        result = await session.execute(query)
+        product = result.first()
+        if product:
+            product.Product.availability = availability
+
+    @session_decorator_nested
+    async def patch_product_price(self, number, price, session):
+        print("patch")
+        query = select(Product).filter_by(number=number)
+        result = await session.execute(query)
+        product = result.first()
+        if product:
+            product.Product.price = price
 
     @session_decorator
     async def add_product(self, number, title, availability, price, session: Session):
