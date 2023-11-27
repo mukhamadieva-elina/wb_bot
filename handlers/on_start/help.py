@@ -8,7 +8,7 @@ from form import Form
 from handlers.router import router
 
 
-@router.message(Form.menu, F.text.casefold() == '❓ помощь')
+@router.message(F.text.casefold() == '❓ помощь')
 async def my_items(message: Message, state: FSMContext) -> None:
     await message.answer(
         utils.info
