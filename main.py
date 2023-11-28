@@ -10,10 +10,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 import config
 
 import handlers
-from api import api_service
-from db.models.base import Base
 from middleware.service_middleware import ServiceMiddleware
-from services import items_checker
+from services import notifier
 
 TOKEN = config.TOKEN
 
@@ -38,7 +36,7 @@ async def regular_update():
     # products = await product_service.get_all_product()
     # print(products)
     while True:
-        await items_checker.get_changed_items(product_service, user_service, bot)
+        await notifier.run(product_service, user_service, bot)
         await asyncio.sleep(10)
 
     # await items_checker.update(bot, product_service)
