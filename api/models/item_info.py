@@ -11,7 +11,7 @@ def get_card(link, availability, title, start_price, last_price, diff_price, tre
             convert_treshhold = str(treshhold) + '%'
         return f"{hide_link(link)}Название товара: {title}\n" \
                f"Изначальная цена товара: {start_price}\nПоследняя измененная цена товара: {last_price}\n" \
-               f"Разница в цене: {abs(diff_price)}\nТекущий порог оповещения: {convert_treshhold}\n", \
+               f"Разница в цене: {diff_price}\nТекущий порог оповещения: {convert_treshhold}\n", \
             keyboards.item_card_available_kb
     else:
         return f"{hide_link(link)}Товара нет в наличии!\nНазвание товара: {title}\n", \

@@ -31,7 +31,7 @@ async def update_treshhold_to_n(callback: CallbackQuery, user_service: UserServi
                                       user_product.Product.title,
                                       user_product.UserProduct.start_price,
                                       user_product.Product.price,
-                                      abs(user_product.Product.price - user_product.UserProduct.start_price),
+                                      user_product.Product.price - user_product.UserProduct.start_price,
                                       user_product.UserProduct.alert_threshold)
         await callback.message.edit_text(info,
                                          reply_markup=kb(number))
