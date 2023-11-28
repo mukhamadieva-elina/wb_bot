@@ -26,7 +26,7 @@ async def notify_aval(aval_changed_items, product_service: ProductService, user_
         else:  # if api_aval == True
             if start_price == -1:
                 await user_service.patch_start_price(telegram_id, number)
-                info, kb = get_card(get_image(number), api_aval, title, api_price, api_price, diff, alert_thr)
+                info, kb = get_card(get_image(number), api_aval, title, api_price, api_price, 0, alert_thr)
 
             await bot.send_message(chat_id=telegram_id, text=f"Привет товар появился в наличии")
             await bot.send_message(chat_id=telegram_id, text=info, reply_markup=kb(number))
