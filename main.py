@@ -4,19 +4,19 @@ import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 import config
 
 import handlers
-from api import api_service
 from middleware.service_middleware import ServiceMiddleware
-from services import items_checker
+from services import notifier
 
 TOKEN = config.TOKEN
 
-DATABASE_URL = f"postgresql+asyncpg://dyvawvhc:{config.bd_pass}@trumpet.db.elephantsql.com/dyvawvhc"
+# DATABASE_URL = f"postgresql+asyncpg://dyvawvhc:{config.bd_pass}@trumpet.db.elephantsql.com/dyvawvhc"
+DATABASE_URL = f"postgresql+asyncpg://nusiykxb:{config.bd_pass}@lucky.db.elephantsql.com/nusiykxb"
 
 engine = create_async_engine(DATABASE_URL)
 
@@ -29,16 +29,25 @@ user_service = service_middleware.user_service
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
 
+# items_checker.getChangedItems(product_service)
 
 async def regular_update():
-    i = 0
+
+    # products = await product_service.get_all_product()
+    # print(products)
     while True:
-        print(f"main")
-        await items_checker.update(bot, product_service, user_service)
+        await notifier.run(product_service, user_service, bot)
+        await asyncio.sleep(10)
+
+    # await items_checker.update(bot, product_service)
+
 
 
 async def main():
+
     dp.include_routers(handlers.router)
+
+
     task = asyncio.create_task(regular_update())
     await dp.start_polling(bot)
 
