@@ -25,7 +25,7 @@ async def notify_aval(aval_changed_items, product_service: ProductService, user_
 
         else:  # if api_aval == True
             if start_price == -1:
-                await user_service.patch_start_price(api_price)
+                await user_service.patch_start_price(telegram_id, number)
                 info, kb = get_card(get_image(number), api_aval, title, api_price, api_price, diff, alert_thr)
 
             await bot.send_message(chat_id=telegram_id, text=f"Привет товар появился в наличии")
@@ -34,11 +34,14 @@ async def notify_aval(aval_changed_items, product_service: ProductService, user_
 
 
     for (number, api_aval, api_price) in aval_changed_items:
+        print("number:", number)
         product = await product_service.get_product(number=number)
         title = product.Product.title
         user_products = await product_service.get_user_products_by_product(number=number)
         task = [notify_aval_user(user_product) for user_product in user_products]
+        print("aval gather")
         await asyncio.gather(*task)
+        print("after aval gather")
 
 
 
@@ -69,5 +72,8 @@ async def notify_prices(price_changed_items, product_service: ProductService, bo
 
 async def run(product_service: ProductService, user_serivce: UserService, bot):
     aval_items, price_items = await get_changed_items(product_service)
+    print("get chaned items end")
     await notify_aval(aval_items, product_service, user_serivce, bot)
+    print("notify_aval")
     await notify_prices(price_items, product_service, bot)
+    print("notify prices")
