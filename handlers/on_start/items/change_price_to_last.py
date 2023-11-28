@@ -19,7 +19,7 @@ async def update_tracking_price(callback: CallbackQuery, user_service: UserServi
     info, kb = get_card(api_service.get_image(int(item.Product.number)), item.Product.availability,
                         item.Product.title,
                         item.UserProduct.start_price, item.Product.price,
-                        item.Product.price - item.UserProduct.start_price, item.UserProduct.alert_threshold)
+                        abs(item.Product.price - item.UserProduct.start_price), item.UserProduct.alert_threshold)
     try:
         await callback.message.edit_text(
             info,
