@@ -1,14 +1,11 @@
 # При нажатии на кнопку “Добавить товар” бот присылает сообщение с просьбой отправить артикул товара.
 # Также появляется кнопка в клавиатуре “Назад” (при нажатии на которую бот возвращается в главное меню)
 # Хендлер, который срабатывает на добавить товар.
-from aiogram import Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from aiogram.utils.markdown import hide_link
 
 import keyboards
 import utils
-from db.models.product import Product
 from db.product_service import ProductService
 from db.user_service import UserService
 from form import Form

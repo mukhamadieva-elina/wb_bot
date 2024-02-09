@@ -3,8 +3,8 @@ from io import BytesIO
 
 import aiohttp
 
-from aiogram import Router, F
-from aiogram.types import CallbackQuery, InputMediaPhoto, URLInputFile, message, input_file
+from aiogram import F
+from aiogram.types import CallbackQuery
 from aiogram.utils.markdown import hide_link
 from matplotlib import pyplot as plt
 
@@ -13,7 +13,6 @@ import keyboards
 from api import api_service
 
 from handlers.router import router
-from main import bot
 
 
 @router.callback_query(F.data.startswith('price_diagram'))
