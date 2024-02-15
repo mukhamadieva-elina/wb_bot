@@ -78,3 +78,18 @@ async def test_get_user_products_by_product(connection, setup_db):
     product_service = ProductService(connection)
     user_products = await product_service.get_user_products_by_product(number=1)
     assert not user_products
+
+
+@pytest.mark.asyncio
+async def test_get_product(connection, setup_db):
+    product_service = ProductService(connection)
+    await product_service.add_product(60594019, "1", True, 100)
+    products = await product_service.get_product(60594019)
+    assert products is not None
+
+
+@pytest.mark.asyncio
+async def test_get_not_exist_product(connection, setup_db):
+    product_service = ProductService(connection)
+    products = await product_service.get_product(605940191)
+    assert products is None
