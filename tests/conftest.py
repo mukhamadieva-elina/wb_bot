@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
-from db.models import Base, User
+from wb_bot.db.models import Base, User
 
 TEST_DB_NAME = "test"
 

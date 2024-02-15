@@ -1,7 +1,7 @@
 import pytest
 
-from api import api_service
-from services.items_checker import get_price_product_api, get_aval_product_api
+from wb_bot.api import api_service
+from wb_bot.services.items_checker import get_price_product_api, get_aval_product_api
 
 
 @pytest.mark.asyncio

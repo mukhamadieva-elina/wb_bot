@@ -1,4 +1,4 @@
-from api.models.item_info import get_card
+from wb_bot.api.models.item_info import get_card
 
 
 def test_get_card_available():
