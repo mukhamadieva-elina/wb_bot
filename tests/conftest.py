@@ -1,10 +1,12 @@
 import asyncio
+from unittest.mock import MagicMock
 
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
 from wb_bot.db.models import Base, User
+from wb_bot.middleware.service_middleware import ServiceMiddleware, CounterMiddleware
 
 TEST_DB_NAME = "test"
 
@@ -36,3 +38,7 @@ def setup_db():
     Base.metadata.create_all(engine)
     yield
     Base.metadata.drop_all(engine)
+
+@pytest.fixture
+def counter_middleware():
+    return CounterMiddleware()
