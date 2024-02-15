@@ -1,6 +1,4 @@
-from typing import Optional, Tuple
-
-from sqlalchemy import insert, select, update, Row
+from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker, Session
 from db.models.product import Product
@@ -16,7 +14,7 @@ class UserService:
         self.session = sessionmaker(bind=engine, class_=AsyncSession)
 
     @session_decorator
-    async def get_user(self, telegram_id, session: Session) -> Optional[Tuple[User,]]:
+    async def get_user(self, telegram_id, session: Session):
         query = select(User).filter_by(telegram_id=telegram_id)
         result = await session.execute(query)
         return result.first()
