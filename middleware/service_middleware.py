@@ -3,8 +3,8 @@ from typing import Callable, Any, Dict, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 
-from wb_bot.db.product_service import ProductService
-from wb_bot.db.user_service import UserService
+from db.product_service import ProductService
+from db.user_service import UserService
 
 
 class CounterMiddleware(BaseMiddleware):

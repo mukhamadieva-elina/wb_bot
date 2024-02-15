@@ -2,9 +2,9 @@ from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker, Session
 
-from wb_bot.db.models import User, Product, UserProduct
-from wb_bot.db.product_service import ProductService
-from wb_bot.db.utils import session_decorator_nested, session_decorator
+from db.models import User, Product, UserProduct
+from db.product_service import ProductService
+from db.utils import session_decorator_nested, session_decorator
 
 
 class UserService:

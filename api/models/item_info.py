@@ -1,6 +1,6 @@
 from aiogram.utils.markdown import hide_link
 
-from wb_bot import keyboards
+import keyboards
 
 
 def get_card(link, availability, title, start_price, last_price, diff_price, treshhold):

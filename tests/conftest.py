@@ -5,8 +5,8 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
-from wb_bot.db.models import Base, User
-from wb_bot.middleware.service_middleware import ServiceMiddleware, CounterMiddleware
+from db.models import Base, User
+from middleware.service_middleware import ServiceMiddleware, CounterMiddleware
 
 TEST_DB_NAME = "test"
 

@@ -1,9 +1,9 @@
 import pytest
 from sqlalchemy.exc import DBAPIError
 
-from wb_bot.db.models import Product, UserProduct, User
-from wb_bot.db.product_service import ProductService
-from wb_bot.db.user_service import UserService
+from db.models import Product, UserProduct, User
+from db.product_service import ProductService
+from db.user_service import UserService
 from sqlalchemy import insert, select
 
 telegram_id_test = 123456

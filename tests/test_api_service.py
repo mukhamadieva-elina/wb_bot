@@ -1,7 +1,7 @@
 import pytest
 from aiogram.client.session import aiohttp
 
-from wb_bot.api.api_service import get_product, get_session, get_image, get_price_history
+from api.api_service import get_product, get_session, get_image, get_price_history
 
 
 # TODO

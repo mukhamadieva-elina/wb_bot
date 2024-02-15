@@ -1,7 +1,7 @@
 import asyncio
 
-from wb_bot.api import api_service
-from wb_bot.db.product_service import ProductService
+from api import api_service
+from db.product_service import ProductService
 
 
 def get_price_product_api(api_obj):

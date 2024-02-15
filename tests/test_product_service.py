@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from wb_bot.db.product_service import ProductService
+from db.product_service import ProductService
 
 
 @pytest.mark.asyncio

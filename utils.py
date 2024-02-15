@@ -1,4 +1,4 @@
-from wb_bot.api import api_service
+from api import api_service
 
 
 def validate_articul(number) -> bool:

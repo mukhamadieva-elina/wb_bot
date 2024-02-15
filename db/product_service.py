@@ -2,8 +2,8 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker, Session
 
-from wb_bot.db.models import Product, UserProduct
-from wb_bot.db.utils import session_decorator, session_decorator_nested
+from db.models import Product, UserProduct
+from db.utils import session_decorator, session_decorator_nested
 
 
 class ProductService:

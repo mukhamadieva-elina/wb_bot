@@ -1,6 +1,6 @@
 import pytest
 
-from wb_bot.utils import validate_articul, exist_in_api
+from utils import validate_articul, exist_in_api
 
 
 @pytest.mark.parametrize("number, result", [('123', True), (123456789012345678901, False), ('abc', False)])
