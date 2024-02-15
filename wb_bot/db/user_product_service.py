@@ -1,9 +1,9 @@
 from sqlalchemy import insert
 from sqlalchemy.orm import sessionmaker, Session
-from db.models.product import Product
-from db.models.user_product import UserProduct
-from db.product_service import ProductService
-from db.utils import session_decorator, session_decorator_nested
+
+from wb_bot.db.models import UserProduct, Product
+from wb_bot.db.product_service import ProductService
+from wb_bot.db.utils import session_decorator, session_decorator_nested
 
 
 class UserProductService:
