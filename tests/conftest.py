@@ -1,10 +1,23 @@
+import asyncio
+
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
 from db.models import Base, User
 
 TEST_DB_NAME = "test"
+
+
+@pytest.fixture(scope='session')
+def event_loop():
+    """
+    Creates an instance of the default event loop for the test session.
+    """
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
+    yield loop
+    loop.close()
 
 
 @pytest.fixture(scope="session")
@@ -21,6 +34,5 @@ def setup_db():
         f"postgresql://postgres:123@localhost:5432/{TEST_DB_NAME}"
     )
     Base.metadata.create_all(engine)
-    yield engine
+    yield
     Base.metadata.drop_all(engine)
-
