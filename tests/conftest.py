@@ -25,7 +25,7 @@ def event_loop():
 @pytest.fixture(scope="session")
 def connection():
     engine = create_async_engine(
-        f"postgresql+asyncpg://postgres:123@localhost:5432/{TEST_DB_NAME}"
+        f"postgresql+asyncpg://postgres:580477@localhost:5432/{TEST_DB_NAME}"
     )
     return engine
 
@@ -33,7 +33,7 @@ def connection():
 @pytest.fixture(scope="session", autouse=True)
 def setup_db():
     engine = create_engine(
-        f"postgresql://postgres:123@localhost:5432/{TEST_DB_NAME}"
+        f"postgresql://postgres:580477@localhost:5432/{TEST_DB_NAME}"
     )
     Base.metadata.create_all(engine)
     yield
@@ -42,3 +42,9 @@ def setup_db():
 @pytest.fixture
 def counter_middleware():
     return CounterMiddleware()
+
+
+@pytest.fixture
+def service_middleware():
+    engine = MagicMock()
+    return ServiceMiddleware(engine)
