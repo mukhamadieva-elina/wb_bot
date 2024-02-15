@@ -21,10 +21,6 @@ def setup_db():
         f"postgresql://postgres:123@localhost:5432/{TEST_DB_NAME}"
     )
     Base.metadata.create_all(engine)
-
-
-def pytest_sessionstart(session):
-    engine = create_engine(
-        f"postgresql://postgres:123@localhost:5432/{TEST_DB_NAME}"
-    )
+    yield engine
     Base.metadata.drop_all(engine)
+
