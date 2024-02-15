@@ -2,8 +2,10 @@ import asyncio
 from api import api_service
 from db.product_service import ProductService
 
+
 def get_price_product_api(api_obj):
     if api_obj:
+        print(api_obj)
         price = api_obj[0]['salePriceU'] / 100
         return price
 
@@ -28,9 +30,12 @@ async def get_changed_items(product_service: ProductService):
     for api_prod, bd_prod in zip(api_prods, bd_products):
         prod_number = bd_prod.Product.number
         bd_prod_price = bd_prod.Product.price
-        api_prod_price = get_price_product_api(api_prod)
         bd_prod_aval = bd_prod.Product.availability
         api_prod_aval = get_aval_product_api(api_prod)
+        if api_prod_aval:
+            api_prod_price = get_price_product_api(api_prod)
+        else:
+            api_prod_price = -1
 
         if bd_prod_aval != api_prod_aval:
             aval_changed_items.append((prod_number, api_prod_aval, api_prod_price))
@@ -42,4 +47,3 @@ async def get_changed_items(product_service: ProductService):
                     price_changed_items.append((prod_number, api_prod_price))
 
     return aval_changed_items, price_changed_items
-

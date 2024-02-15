@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 import keyboards
-from api.api_service import get_image
+from api import api_service
 from api.models import item_info
 from db.user_service import UserService
 
@@ -14,7 +14,7 @@ from handlers.router import router
 async def back_to_item(callback: CallbackQuery, user_service: UserService):
     number = int(callback.data.split('to_card_item_')[1])
     user_product = await user_service.get_user_product_by_number(callback.from_user.id, number)
-    info, kb = item_info.get_card(get_image(int(number)), user_product.Product.availability, user_product.Product.title,
+    info, kb = item_info.get_card(api_service.get_image(int(number)), user_product.Product.availability, user_product.Product.title,
                                   user_product.UserProduct.start_price,
                                   user_product.Product.price,
                                   user_product.Product.price - user_product.UserProduct.start_price,

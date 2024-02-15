@@ -20,11 +20,8 @@ async def update_tracking_price(callback: CallbackQuery, user_service: UserServi
                         item.Product.title,
                         item.UserProduct.start_price, item.Product.price,
                         abs(item.Product.price - item.UserProduct.start_price), item.UserProduct.alert_threshold)
-    try:
-        await callback.message.edit_text(
-            info,
-            reply_markup=kb(item.Product.number)
-        )
-    except TelegramBadRequest:
-        pass
+    await callback.message.edit_text(
+        info,
+        reply_markup=kb(item.Product.number)
+    )
     await callback.answer('Цена успешно изменена')
