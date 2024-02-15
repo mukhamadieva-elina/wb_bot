@@ -2,22 +2,19 @@ from datetime import datetime
 from io import BytesIO
 
 import aiohttp
-
-from aiogram import Router, F
-from aiogram.types import CallbackQuery, InputMediaPhoto, URLInputFile, message, input_file
+from aiogram import F
+from aiogram.types import CallbackQuery
 from aiogram.utils.markdown import hide_link
 from matplotlib import pyplot as plt
 
 import config
 import keyboards
 from api import api_service
-
 from handlers.router import router
-from main import bot
 
 
 @router.callback_query(F.data.startswith('price_diagram'))
-async def price_diagram(callback: CallbackQuery):
+async def send_price_diagram(callback: CallbackQuery):
     number = callback.data.split('price_diagram_')[1]
     url = await get_diagram(number)
     # message = await bot.send_document(chat_id=callback.from_user.id, document=plot, disable_notification=True)
@@ -30,23 +27,29 @@ async def price_diagram(callback: CallbackQuery):
 
 
 async def get_diagram(number):
-    response = await api_service.get_price_history(int(number))
+    try:
+        response = await api_service.get_price_history(int(number))
+    except ValueError as e:
+        raise TypeError("number must be castable to int")
+    if not response:
+        return None
     dt = []
     price = []
     for elem in response:
         dt.append(datetime.fromtimestamp(elem['dt']))
         price.append(elem['price']['RUB'] / 100)
-    if not len(dt):
+    if not dt:
         return None
     fig, ax = plt.subplots(nrows=1, ncols=1)
     ax.plot(dt, price)
     img = BytesIO()
     fig.savefig(img, format='webp')
+    print("EEEEENDDDD")
     url = await upload_image_to_service(img, config.api_key)
     return url
 
 
-async def upload_image_to_service(image_data, api_key):
+async def upload_image_to_service(image_data, api_key) -> str:
     try:
         # Переход к началу данных изображения
         image_data.seek(0)
