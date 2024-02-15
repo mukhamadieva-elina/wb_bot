@@ -9,7 +9,7 @@ from handlers.router import router
 
 
 @router.message(F.text.casefold() == '❓ помощь')
-async def help(message: Message, state: FSMContext) -> None:
+async def my_items(message: Message, state: FSMContext) -> None:
     await message.answer(
         utils.info
     )
