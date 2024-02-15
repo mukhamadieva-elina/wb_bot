@@ -38,8 +38,7 @@ async def get_diagram(number):
     for elem in response:
         dt.append(datetime.fromtimestamp(elem['dt']))
         price.append(elem['price']['RUB'] / 100)
-    if not dt:
-        return None
+
     fig, ax = plt.subplots(nrows=1, ncols=1)
     ax.plot(dt, price)
     img = BytesIO()
@@ -73,7 +72,7 @@ async def upload_image_to_service(image_data, api_key) -> str:
                     image_url = data['data']['image']['url']
                     return image_url
                 else:
-                    print('Ошибка при загрузке изображения:', data['error']['message'])
+                    print('Ошибка при загрузке изображения:')
                     return None
 
     except Exception as e:
