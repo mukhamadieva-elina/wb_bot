@@ -1,2 +1,2 @@
 from .back import *
-from .price_diagram import *
+from .show_price_diagram import *

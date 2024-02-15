@@ -9,7 +9,6 @@ from handlers.router import router
 from main import bot
 
 
-
 @router.message(F.text.casefold() == '📝 написать в поддержку')
 async def support(message: Message, state: FSMContext) -> None:
     await state.set_state(Form.support)
@@ -18,6 +17,3 @@ async def support(message: Message, state: FSMContext) -> None:
         f'Привет! Оставьте свои пожелание разработчикам)',
         reply_markup=keyboards.return_to_menu_kb
     )
-
-
-
