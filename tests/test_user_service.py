@@ -117,6 +117,14 @@ async def test_patch_alert_threshold(connection):
 
 
 @pytest.mark.asyncio
+async def test_patch_invalid_alert_threshold(connection):
+    user_service = UserService(connection)
+    with pytest.raises(DBAPIError):
+        await user_service.patch_alert_threshold(telegram_id=telegram_id_test, product_number=product['number'],
+                                                 alert_threshold='alert')
+
+
+@pytest.mark.asyncio
 async def test_patch_start_price(connection):
     user_service = UserService(connection)
     await user_service.patch_start_price(telegram_id=telegram_id_test, product_number=product['number']
