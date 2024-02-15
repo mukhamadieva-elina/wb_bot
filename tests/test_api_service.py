@@ -1,7 +1,7 @@
 import pytest
 from aiogram.client.session import aiohttp
 
-from wb_bot.api.api_service import get_product, get_session, get_image
+from wb_bot.api.api_service import get_product, get_session, get_image, get_price_history
 
 
 # TODO
@@ -61,4 +61,16 @@ def test_get_image_with_invalid_number(number):
     with pytest.raises(TypeError):
         get_image(number)
 
-# TODO test_get_price_history
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("number, result_len", [(2389212, 33783)])
+async def test_get_price_history(number, result_len):
+    result = await get_price_history(number)
+    assert result[0]['price']['RUB'] == result_len
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("number", ['abc', '123456'])
+async def test_get_price_history_with_invalid_number(number):
+    with pytest.raises(TypeError):
+        await get_price_history(number)
