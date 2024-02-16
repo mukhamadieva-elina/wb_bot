@@ -38,7 +38,7 @@ class UserService:
         return products
 
     @session_decorator
-    async def get_user_product_by_number(self, telegram_id: int, number: int, session: Session):
+    async def get_user_product_by_number(self, telegram_id: int, number: int, session: Session) -> Optional[Tuple[Product, UserProduct]]:
         query = select(Product, UserProduct).join(UserProduct, UserProduct.product_id == Product.id) \
             .filter(UserProduct.user_telegram_id == telegram_id).filter(Product.number == number)
         result = await session.execute(query)
