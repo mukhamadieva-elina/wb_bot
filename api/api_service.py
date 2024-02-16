@@ -83,3 +83,4 @@ async def get_price_history(number):
         async with session.get(
                 f"/vol{number // 100000}/part{number // 1000}/{number}/info/price-history.json") as resp:
             return await resp.json() if resp.ok else None
+
