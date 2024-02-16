@@ -1,12 +1,10 @@
-from aiogram import F, Router
+from aiogram import F
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from api import api_service
 from api.models.item_info import get_card
 from db.user_service import UserService
-from form import Form
 
 from handlers.router import router
 

@@ -1,4 +1,5 @@
 def session_decorator(func):
+
     async def wrapped(self, *args, **kwargs):
         session = self.session()
         kwargs["session"] = session
