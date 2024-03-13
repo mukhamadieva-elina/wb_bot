@@ -6,14 +6,12 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-
+from bot import bot
 import config
 
 import handlers
 from middleware.service_middleware import ServiceMiddleware
 from services import notifier
-
-TOKEN = config.TOKEN
 
 # DATABASE_URL = f"postgresql+asyncpg://dyvawvhc:{config.bd_pass}@trumpet.db.elephantsql.com/dyvawvhc"
 DATABASE_URL = f"postgresql+asyncpg://nusiykxb:{config.bd_pass}@lucky.db.elephantsql.com/nusiykxb"
@@ -26,7 +24,6 @@ handlers.router.callback_query.middleware(service_middleware)
 product_service = service_middleware.product_service
 user_service = service_middleware.user_service
 
-bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
 
 # items_checker.getChangedItems(product_service)
@@ -48,7 +45,7 @@ async def main():
     dp.include_routers(handlers.router)
 
 
-    task = asyncio.create_task(regular_update())
+    # task = asyncio.create_task(regular_update())
     await dp.start_polling(bot)
 
 
