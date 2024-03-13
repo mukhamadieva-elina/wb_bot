@@ -46,7 +46,7 @@ async def main():
 
 
     # task = asyncio.create_task(regular_update())
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, skip_updates=True)
 
 
 if __name__ == "__main__":

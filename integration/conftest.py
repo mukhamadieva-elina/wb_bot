@@ -10,7 +10,7 @@ import config
 import main
 
 
-@fixture
+@fixture(scope="module")
 async def start_bot():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     print("running bot")
@@ -18,8 +18,7 @@ async def start_bot():
     await asyncio.sleep(5)
     yield
 
-
-@fixture
+@fixture(scope="module")
 async def conv():
     api_id = config.api_id
     api_hash = config.api_hash

@@ -7,8 +7,8 @@ import utils
 from integration import constants
 
 
-@pytest.mark.asyncio
-async def test_some_asyncio_code(start_bot, conv):
+@pytest.mark.asyncio(scope="module")
+async def test_start(start_bot, conv):
     await conv.send_message("/start")
     resp: Message = await conv.get_response()
     reply_markup: ReplyKeyboardMarkup = resp.reply_markup
@@ -18,4 +18,11 @@ async def test_some_asyncio_code(start_bot, conv):
     for button, title in zip(all_buttons, constants.expected_start_kb_texts):
         assert button.text == title
 
+    assert resp.text == utils.info
+
+@pytest.mark.asyncio(scope="module")
+async def test_help(start_bot, conv):
+    await conv.send_message("/start")
+    await conv.send_message("/help")
+    resp: Message = await conv.get_response()
     assert resp.text == utils.info
