@@ -10,6 +10,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.base import StorageKey
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from middleware.service_middleware import CounterMiddleware
 from tests.units.mocked_bot import MockedBot
 
 
@@ -94,3 +95,7 @@ def callback_query(aiogram_user: aiogram.types.User) -> aiogram.types.CallbackQu
 def input_message(aiogram_user: aiogram.types.User) -> aiogram.types.Message:
     chat = aiogram.types.Chat(id=1, type="private")
     return aiogram.types.Message(message_id=1, date=datetime.now(), chat=chat, from_user=aiogram_user, text="testText")
+
+@pytest.fixture
+def counter_middleware():
+    return CounterMiddleware()
