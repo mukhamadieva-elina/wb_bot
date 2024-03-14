@@ -15,7 +15,7 @@ from handlers.on_start.support import process_msg_to_support
 
 @pytest.mark.asyncio
 async def test_support(input_message: aiogram.types.Message, mocker: MockFixture):
-    admin_id = 491198715
+    admin_id = 480316781
     send_message_mock = mocker.patch("aiogram.Bot.send_message", new_callable=AsyncMock)
     fsm_mock: FSMContext = create_autospec(FSMContext, instance=True, new_callable=AsyncMock)
     message_answer_mock: AsyncMock = mocker.patch("aiogram.types.Message.answer", new_callable=AsyncMock)

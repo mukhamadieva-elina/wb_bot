@@ -71,6 +71,7 @@ async def notify_prices(price_changed_items, product_service: ProductService, bo
 
 
 async def run(product_service: ProductService, user_serivce: UserService, bot):
+    print("NOTIFIER RUN:")
     aval_items, price_items = await get_changed_items(product_service)
     print("get chaned items end")
     await notify_aval(aval_items, product_service, user_serivce, bot)
