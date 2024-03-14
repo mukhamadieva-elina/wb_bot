@@ -45,6 +45,21 @@ def user_product_item_1():
     user_product.UserProduct.alert_threshold = 0
     return user_product
 
+
+@fixture()
+def user_product_item_change_start_price(user_product_item_1):
+    user_product = MagicMock()
+    user_product.Product.id = 1
+    user_product.Product.number = 197659450
+    user_product.Product.title = "Cолнцезащитные очки"
+    user_product.Product.availability = True
+    user_product.Product.price = 420.0
+    user_product.UserProduct.user_telegram_id = 123
+    user_product.UserProduct.product_id = 1
+    user_product.UserProduct.start_price = 420.0
+    user_product.UserProduct.alert_threshold = 0
+    return user_product
+
 @fixture()
 def user_product_item_2():
     user_product = MagicMock()
