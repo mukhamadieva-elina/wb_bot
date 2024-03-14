@@ -11,9 +11,9 @@ from pytest_mock import MockFixture
 import keyboards
 
 from handlers.on_start.items.price_diagram.show_price_diagram import get_diagram, upload_image_to_service, send_price_diagram
-from tests.unit import constants
-from tests.unit.constants import price_history_ex
-from tests.unit.conftest import input_message
+from tests.units import constants
+from tests.units.constants import price_history_ex
+from tests.units.conftest import input_message
 
 
 # from handlers import upload_image_to_service

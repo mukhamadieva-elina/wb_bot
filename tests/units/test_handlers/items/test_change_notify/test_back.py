@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 from aiogram.utils.markdown import hide_link
-from tests.unit.conftest import *
+from tests.units.conftest import *
 import keyboards
 from db.user_service import UserService
 from handlers import update_treshhold, back_to_item

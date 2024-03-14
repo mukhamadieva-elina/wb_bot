@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock, AsyncMock, create_autospec
-from tests.unit.conftest import *
+from tests.units.conftest import *
 
 import aiogram
 import pytest
@@ -9,7 +9,7 @@ from pytest_mock import MockFixture
 
 import keyboards
 import utils
-from tests.unit.conftest import input_message
+from tests.units.conftest import input_message
 from handlers.on_start.support import process_msg_to_support
 
 

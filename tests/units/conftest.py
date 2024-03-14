@@ -10,7 +10,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.base import StorageKey
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from tests.unit.mocked_bot import MockedBot
+from tests.units.mocked_bot import MockedBot
 
 
 @pytest_asyncio.fixture(scope="session")
