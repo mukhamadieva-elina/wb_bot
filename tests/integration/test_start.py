@@ -4,7 +4,7 @@ from telethon.tl.types import KeyboardButton
 from telethon.tl.types import ReplyKeyboardMarkup
 
 import utils
-from integration import constants
+from tests.integration import constants
 
 
 @pytest.mark.asyncio(scope="module")
