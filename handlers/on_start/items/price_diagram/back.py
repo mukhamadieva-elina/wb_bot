@@ -1,11 +1,8 @@
-from aiogram import Router, F
-from aiogram.fsm.context import FSMContext
+from aiogram import F
 from aiogram.types import CallbackQuery
 
-import keyboards
 from api.api_service import get_image
 from api.models import item_info
-from db import user_service
 from db.user_service import UserService
 
 from handlers.router import router

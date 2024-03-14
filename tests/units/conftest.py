@@ -2,6 +2,8 @@ from datetime import datetime
 
 import aiogram
 from unittest.mock import AsyncMock, MagicMock
+from db.models import Base, User
+from middleware.service_middleware import ServiceMiddleware, CounterMiddleware
 
 import pytest
 import pytest_asyncio
@@ -9,6 +11,8 @@ from aiogram import Dispatcher
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.base import StorageKey
 from aiogram.fsm.storage.memory import MemoryStorage
+from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from tests.units.mocked_bot import MockedBot
 
@@ -95,3 +99,44 @@ def input_message(aiogram_user: aiogram.types.User) -> aiogram.types.Message:
     chat = aiogram.types.Chat(id=1, type="private")
     return aiogram.types.Message(message_id=1, date=datetime.now(), chat=chat, from_user=aiogram_user, text="testText")
 
+
+TEST_DB_NAME = "test"
+
+
+@pytest.fixture(scope='session')
+def event_loop():
+    """
+    Creates an instance of the default event loop for the test session.
+    """
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
+    yield loop
+    loop.close()
+
+
+@pytest.fixture(scope="session")
+def connection():
+    engine = create_async_engine(
+        f"postgresql+asyncpg://postgres:123@localhost:5432/{TEST_DB_NAME}"
+    )
+    return engine
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_db():
+    engine = create_engine(
+        f"postgresql://postgres:123@localhost:5432/{TEST_DB_NAME}"
+    )
+    Base.metadata.create_all(engine)
+    yield
+    Base.metadata.drop_all(engine)
+
+@pytest.fixture
+def counter_middleware():
+    return CounterMiddleware()
+
+
+@pytest.fixture
+def service_middleware():
+    engine = MagicMock()
+    return ServiceMiddleware(engine)

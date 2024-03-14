@@ -1,13 +1,8 @@
-from aiogram import Router, F
-from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, InputFile
-from aiogram.utils.markdown import hide_link
+from aiogram import F
+from aiogram.types import Message
 
-import keyboards
 from api import api_service
-from db.product_service import ProductService
 from db.user_service import UserService
-from form import Form
 from api.models.item_info import get_card
 
 from handlers.router import router
