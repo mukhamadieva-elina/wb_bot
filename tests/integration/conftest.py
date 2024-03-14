@@ -24,7 +24,7 @@ def event_loop():
     return asyncio.get_event_loop()
 
 
-@fixture(scope="module")
+@fixture(scope="session")
 async def start_bot():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     print("running bot")
@@ -42,8 +42,20 @@ async def conv():
     client = TelegramClient(StringSession(session_str), api_id, api_hash, system_version="4.16.30-vxCUSTOM")
 
     async with client:
+
         async with client.conversation("@xenob8bot", timeout=5) as conv:
             yield conv
+
+@fixture(scope="module")
+async def client():
+    api_id = config.api_id
+    api_hash = config.api_hash
+    session_str = config.session_str
+
+    client = TelegramClient(StringSession(session_str), api_id, api_hash, system_version="4.16.30-vxCUSTOM")
+
+    async with client:
+        yield client
 
 
 @pytest.fixture(scope='session')

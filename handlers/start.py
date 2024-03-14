@@ -15,6 +15,7 @@ async def command_start(message: Message, state: FSMContext, user_service: UserS
     # await state.set_state(Form.menu)
     id_user = message.from_user.id
     if not await user_service.get_user(id_user):
+        await message.answer("user not exist, adding")
         await user_service.add_user(id_user)
     await message.answer(
         utils.info,
