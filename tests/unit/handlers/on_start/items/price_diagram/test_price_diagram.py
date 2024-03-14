@@ -9,12 +9,11 @@ from aiohttp import ClientResponse
 from pytest_mock import MockFixture
 
 import keyboards
-from tests.conftest import callback_query, aiogram_user
 
 from handlers.on_start.items.price_diagram.show_price_diagram import get_diagram, upload_image_to_service, send_price_diagram
-from tests import constants
-from tests.constants import price_history_ex
-from tests.conftest import input_message
+from tests.unit import constants
+from tests.unit.constants import price_history_ex
+from tests.unit.conftest import input_message
 
 
 # from handlers import upload_image_to_service

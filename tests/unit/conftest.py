@@ -1,18 +1,16 @@
 from datetime import datetime
 
 import aiogram
-import pytest
-import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 import pytest_asyncio
-from aiogram import Dispatcher, Bot
+from aiogram import Dispatcher
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.base import StorageKey
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from tests.mocked_bot import MockedBot
+from tests.unit.mocked_bot import MockedBot
 
 
 @pytest_asyncio.fixture(scope="session")

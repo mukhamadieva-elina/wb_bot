@@ -5,9 +5,9 @@ import pytest
 from pytest_mock import MockFixture
 
 import utils
-from tests.conftest import input_message
+from tests.unit.conftest import input_message
 from handlers.on_start.help import help
-from tests.conftest import *
+from tests.unit.conftest import *
 
 
 @pytest.mark.asyncio

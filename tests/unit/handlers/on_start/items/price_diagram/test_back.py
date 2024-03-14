@@ -3,13 +3,13 @@ from unittest.mock import AsyncMock
 import aiogram.types
 import pytest
 from pytest_mock import MockerFixture
-from tests.conftest import *
+from tests.unit.conftest import *
 
 from api.api_service import get_image
 from api.models import item_info
 from db.models import UserProduct, Product
 from handlers import back_to_item_from_diagram
-from tests import constants
+from tests.unit import constants
 
 
 @pytest.mark.asyncio
