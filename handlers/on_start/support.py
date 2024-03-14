@@ -6,7 +6,7 @@ import keyboards
 from form import Form
 
 from handlers.router import router
-from main import bot
+from bot import bot
 
 
 @router.message(Form.support)

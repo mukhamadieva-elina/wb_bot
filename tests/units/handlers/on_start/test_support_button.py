@@ -1,5 +1,5 @@
 from unittest.mock import AsyncMock, create_autospec
-from tests.conftest import *
+from tests.units.conftest import *
 
 import aiogram
 import pytest
@@ -9,7 +9,7 @@ from pytest_mock import MockFixture
 import keyboards
 from form import Form
 from handlers import support
-from tests.conftest import input_message
+from tests.units.conftest import input_message
 
 
 @pytest.mark.asyncio

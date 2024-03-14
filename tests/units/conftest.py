@@ -1,21 +1,20 @@
 from datetime import datetime
 
 import aiogram
-import pytest
-import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 import pytest_asyncio
-from aiogram import Dispatcher, Bot
+from aiogram import Dispatcher
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.base import StorageKey
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from tests.mocked_bot import MockedBot
+from middleware.service_middleware import CounterMiddleware
+from tests.units.mocked_bot import MockedBot
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture()
 async def storage():
     tmp_storage = MemoryStorage()
     try:
@@ -39,7 +38,7 @@ async def dispatcher():
         await dp.emit_shutdown()
 
 
-@pytest.fixture(scope="session")
+@pytest_asyncio.fixture()
 def state(bot, storage):
     return FSMContext(
         storage=storage,
@@ -97,3 +96,6 @@ def input_message(aiogram_user: aiogram.types.User) -> aiogram.types.Message:
     chat = aiogram.types.Chat(id=1, type="private")
     return aiogram.types.Message(message_id=1, date=datetime.now(), chat=chat, from_user=aiogram_user, text="testText")
 
+@pytest.fixture
+def counter_middleware():
+    return CounterMiddleware()

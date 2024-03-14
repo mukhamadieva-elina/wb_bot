@@ -8,7 +8,7 @@ import keyboards
 import utils
 from db.user_service import UserService
 from handlers import start
-from tests.conftest import input_message
+from tests.units.conftest import input_message
 
 
 @pytest.mark.asyncio

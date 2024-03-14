@@ -2,9 +2,7 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker, Session
 
-from db.dto.ProductUpdateDto import ProductUpdateDto
-from db.models.product import Product
-from db.models.user_product import UserProduct
+from db.models import Product, UserProduct
 from db.utils import session_decorator, session_decorator_nested
 
 
@@ -63,6 +61,7 @@ class ProductService:
             inserting_product = insert(Product).values(number=number, title=title, availability=availability,
                                                        price=price)
             await session.execute(inserting_product)
+
 
     @session_decorator_nested
     async def get_all_product(self, session: Session):
