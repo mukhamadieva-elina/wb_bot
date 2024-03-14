@@ -5,6 +5,7 @@ from telethon.tl.types import ReplyKeyboardMarkup
 
 import utils
 from tests.integration import constants
+from tests.integration import conftest
 
 
 @pytest.mark.asyncio(scope="module")
@@ -27,3 +28,4 @@ async def test_help(start_bot, conv):
     await conv.send_message("/help")
     resp: Message = await conv.get_response()
     assert resp.text == utils.info
+

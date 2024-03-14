@@ -1,9 +1,11 @@
 import pytest
 
 from api.api_service import get_product, get_price_history
+@pytest.mark.asyncio
+def test_foo():
+    assert 2 == 2
 
-
-#   ТЕСТ №19
+  # ТЕСТ №19
 @pytest.mark.asyncio
 async def test_get_product():
     product_number_test = 106281294

@@ -5,7 +5,6 @@ from db.product_service import ProductService
 from sqlalchemy import insert, select, delete, update
 
 
-#   ТЕСТ №14
 @pytest.mark.asyncio
 async def test_patch_start_price(connection):
     product = {'id': 5, 'number': 123, 'title': '1', 'availability': True, 'price': 100}

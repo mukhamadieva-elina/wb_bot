@@ -62,6 +62,7 @@ class ProductService:
                                                        price=price)
             await session.execute(inserting_product)
 
+
     @session_decorator_nested
     async def get_all_product(self, session: Session):
         query = select(Product)
