@@ -13,46 +13,60 @@ from tests.integration import constants
 
 
 @pytest.mark.asyncio
-async def test_notify(mocker: MockerFixture, connection, client):
+async def test_notify_now_aval(mocker: MockerFixture, connection, client, user_product_item_notifier_not_aval,
+                      product_item_notifier_not_aval):
     product_service = ProductService(connection)
     user_service = UserService(connection)
-    item_art = 88000
-    user_product_service = UserProductService(connection)
-    test_user_1 = {"telegram_id": 480316781}
-    test_product_1 = {"number": item_art, "title": "test_prod_1", "aval": False, "price": 5000}
-
-    await user_service.delete_user_product(telegram_id=test_user_1["telegram_id"],
-                                           product_number=test_product_1["number"])
-    async with connection.connect() as conn:
-        await conn.execute(delete(Product).where(Product.number == test_product_1["number"]))
-        await conn.commit()
-
-    await product_service.add_product(number=test_product_1["number"], title=test_product_1["title"],
-                                      availability=test_product_1["aval"], price=test_product_1["price"])
-    # await user_service.add_user()
-    await user_service.add_user_product(telegram_id=test_user_1["telegram_id"], number=test_product_1["number"],
-                                        product_service=product_service)
+    item_art = product_item_notifier_not_aval.Product.number
 
     aval_changed_items_appear = [
         (item_art, True, 5555),
     ]
-    aval_changed_items_disappear = [
-        (item_art, False, 5555),
-    ]
-    mocker_data = mocker.patch("services.notifier.get_changed_items")
-    mocker_data.side_effect = [(aval_changed_items_appear, []), (aval_changed_items_disappear, [])]
+
+    mocker.patch("services.notifier.get_changed_items", return_value=(aval_changed_items_appear, []))
+    mocker.patch("db.product_service.ProductService.get_product", return_value=product_item_notifier_not_aval)
+    mocker.patch("db.product_service.ProductService.get_user_products_by_product",
+                 return_value=[user_product_item_notifier_not_aval])
+    link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
+    mocker.patch('api.api_service.get_image', return_value=link_example)
+    mocker.patch("db.product_service.ProductService.patch_product", return_value=product_item_notifier_not_aval)
 
     await notifier.run(product_service, user_service, bot.bot)
-    await notifier.run(product_service, user_service, bot.bot)
 
-    messages: list[TotalList] = await client.get_messages('@xenob8bot', limit=4)
+    messages: list[TotalList] = await client.get_messages('@xenob8bot', limit=2)
 
     messages.reverse()
-    for message, value in zip(messages, constants.notifier_expected_values):
+    for message, value in zip(messages, constants.notifier_now_aval_values):
+        print(message.text)
         assert message.text == value
 
-    await user_service.delete_user_product(telegram_id=test_user_1["telegram_id"],
-                                           product_number=test_product_1["number"])
-    async with connection.connect() as conn:
-        await conn.execute(delete(Product).where(Product.number == test_product_1["number"]))
-        await conn.commit()
+
+@pytest.mark.asyncio
+async def test_notify_now_not_aval(mocker: MockerFixture, connection, client, user_product_item_notifier_not_aval,
+                      product_item_notifier_not_aval):
+    user_product_item_notifier_not_aval.Product.availability = True
+    product_item_notifier_not_aval.Product.availability = True
+    product_service = ProductService(connection)
+    user_service = UserService(connection)
+    item_art = product_item_notifier_not_aval.Product.number
+
+    aval_changed_items_appear = [
+        (item_art, False, 5555),
+    ]
+
+    mocker.patch("services.notifier.get_changed_items", return_value=(aval_changed_items_appear, []))
+    mocker.patch("db.product_service.ProductService.get_product", return_value=product_item_notifier_not_aval)
+    mocker.patch("db.product_service.ProductService.get_user_products_by_product",
+                 return_value=[user_product_item_notifier_not_aval])
+    link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
+    mocker.patch('api.api_service.get_image', return_value=link_example)
+    mocker.patch("db.product_service.ProductService.patch_product", return_value=product_item_notifier_not_aval)
+
+    await notifier.run(product_service, user_service, bot.bot)
+
+    messages: list[TotalList] = await client.get_messages('@xenob8bot', limit=2)
+
+    messages.reverse()
+    for message, value in zip(messages, constants.notifier_now_not_aval_values):
+        print(message.text)
+        assert message.text == value
