@@ -24,7 +24,8 @@ async def my_items(message: Message, user_service: UserService) -> None:
         )
     else:
         for item in my_items:
-            info, kb = get_card(api_service.get_image(int(item.Product.number)), item.Product.availability,
+            photo = api_service.get_image(int(item.Product.number))
+            info, kb = get_card(photo, item.Product.availability,
                                 item.Product.title,
                                 item.UserProduct.start_price, item.Product.price,
                                 item.Product.price - item.UserProduct.start_price, item.UserProduct.alert_threshold)
