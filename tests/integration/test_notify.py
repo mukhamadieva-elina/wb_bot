@@ -4,6 +4,7 @@ from sqlalchemy import delete
 from telethon.helpers import TotalList
 
 import bot
+import config
 from db.models import Product
 from db.product_service import ProductService
 from db.user_product_service import UserProductService
@@ -33,7 +34,7 @@ async def test_notify_now_aval(mocker: MockerFixture, connection, client, user_p
 
     await notifier.run(product_service, user_service, bot.bot)
 
-    messages: list[TotalList] = await client.get_messages('@xenob8bot', limit=2)
+    messages: list[TotalList] = await client.get_messages(config.bot_chat_name, limit=2)
 
     messages.reverse()
     for message, value in zip(messages, constants.notifier_now_aval_values):
@@ -64,7 +65,7 @@ async def test_notify_now_not_aval(mocker: MockerFixture, connection, client, us
 
     await notifier.run(product_service, user_service, bot.bot)
 
-    messages: list[TotalList] = await client.get_messages('@xenob8bot', limit=2)
+    messages: list[TotalList] = await client.get_messages(config.bot_chat_name, limit=2)
 
     messages.reverse()
     for message, value in zip(messages, constants.notifier_now_not_aval_values):

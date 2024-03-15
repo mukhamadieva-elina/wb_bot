@@ -44,7 +44,7 @@ async def conv():
 
     async with client:
 
-        async with client.conversation("@xenob8bot", timeout=5) as conv:
+        async with client.conversation(config.bot_chat_name, timeout=5) as conv:
             yield conv
 
 @fixture(scope="module")
@@ -123,7 +123,7 @@ def user_product_item_notifier_not_aval():
     user_product.Product.title = "Cолнцезащитные очки"
     user_product.Product.availability = False
     user_product.Product.price = 420.0
-    user_product.UserProduct.user_telegram_id = 480316781
+    user_product.UserProduct.user_telegram_id = config.admin_id
     user_product.UserProduct.product_id = 1
     user_product.UserProduct.start_price = 300.0
     user_product.UserProduct.alert_threshold = 0

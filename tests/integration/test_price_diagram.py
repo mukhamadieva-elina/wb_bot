@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 from pytest_mock import MockerFixture
 from telethon.tl.custom.message import Message
@@ -7,17 +9,17 @@ from tests.integration import constants
 
 
 @pytest.mark.asyncio(scope="module")
-async def test_price_diagram(start_bot, conv, mocker: MockerFixture, user_product_item_1, user_product_item_2):
+async def test_price_diagram(start_bot, conv, mocker: MockerFixture, user_product_item_1):
+    await conv.send_message("/start")
+    await conv.get_response()
     link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
     mocker.patch("db.user_service.UserService.get_user_products",
-                 return_value=[user_product_item_1, user_product_item_2])
+                 return_value=[user_product_item_1])
     mocker.patch('api.api_service.get_image', return_value=link_example)
     diagram_link = "https://i.ibb.co/hFnJJz1/image.webp"
     mocker.patch("handlers.on_start.items.price_diagram.show_price_diagram.get_diagram", return_value=diagram_link)
-    await conv.send_message("/start")
-    message = await conv.get_response()
-    await message.click(0, 0)
-    message = await conv.get_response()
+    await conv.send_message("🛍 Мои товары")
+    message: Message = await conv.get_response()
     await message.click(4)
     resp: Message = await conv.get_edit()
     reply_markup: ReplyInlineMarkup = resp.reply_markup
@@ -28,4 +30,5 @@ async def test_price_diagram(start_bot, conv, mocker: MockerFixture, user_produc
         assert button.text == title
     media: MessageMediaWebPage = resp.media
     assert media.webpage.url == diagram_link
+
 

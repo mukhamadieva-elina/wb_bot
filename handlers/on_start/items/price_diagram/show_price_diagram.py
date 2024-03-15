@@ -21,9 +21,11 @@ async def send_price_diagram(callback: CallbackQuery):
     if url:
         await callback.message.edit_text(f'{hide_link(url)}График изменения цены товара',
                                          reply_markup=keyboards.return_to_card_item_kb(number))
+        await callback.answer()
     else:
         await callback.message.edit_text(f'График изменения цены товара недоступен',
                                          reply_markup=keyboards.return_to_card_item_kb(number))
+        await callback.answer()
 
 
 async def get_diagram(number):
