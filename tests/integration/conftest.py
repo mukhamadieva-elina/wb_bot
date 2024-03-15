@@ -43,7 +43,7 @@ async def start_bot():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     print("running bot")
     task = asyncio.create_task(main.main())
-    await asyncio.sleep(5)
+    await asyncio.sleep(15)
     yield
 
 
