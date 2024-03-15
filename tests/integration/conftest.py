@@ -54,10 +54,11 @@ async def conv():
     session_str = config.session_str
 
     client = TelegramClient(StringSession(session_str), api_id, api_hash, system_version="4.16.30-vxCUSTOM")
+    client.session.set_dc(2, config.telegram_client_server, config.telegram_client_port)
 
     async with client:
 
-        async with client.conversation(config.bot_chat_name, timeout=5) as conv:
+        async with client.conversation(config.bot_chat_name, timeout=15) as conv:
             yield conv
 
 @fixture(scope="module")
