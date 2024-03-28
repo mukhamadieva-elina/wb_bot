@@ -10,7 +10,6 @@ from tests.integration import constants
 @pytest.mark.asyncio(scope="module")
 async def test_start(start_bot, conv):
     await conv.send_message("/start")
-    conv.get_response()
     resp: Message = await conv.get_response()
     reply_markup: ReplyKeyboardMarkup = resp.reply_markup
     all_buttons: list[KeyboardButton] = []

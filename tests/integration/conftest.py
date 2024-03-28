@@ -14,15 +14,28 @@ import main
 
 test_bd_pass = config.test_bd_pass
 
+@pytest.fixture(scope="session")
+def event_loop():
+    """
+    Creates an instance of the default event loop for the test session.
+    """
+    if sys.platform.startswith("win") and sys.version_info[:2] >= (3, 8):
+        # Avoid "RuntimeError: Event loop is closed" on Windows when tearing down tests
+        # https://github.com/encode/httpx/issues/914
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+    loop = asyncio.new_event_loop()
+    yield loop
+    loop.close()
 
 # @pytest.fixture(scope="session")
 # def event_loop():
 #     loop = asyncio.get_event_loop()
 #     yield loop
 #     loop.close()
-@pytest.fixture(scope="session")
-def event_loop():
-    return asyncio.get_event_loop()
+# @pytest.fixture(scope="session")
+# def event_loop():
+#     return asyncio.get_event_loop()
 
 
 @fixture(scope="session")
@@ -30,7 +43,7 @@ async def start_bot():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     print("running bot")
     task = asyncio.create_task(main.main())
-    await asyncio.sleep(5)
+    await asyncio.sleep(15)
     yield
 
 
@@ -41,10 +54,11 @@ async def conv():
     session_str = config.session_str
 
     client = TelegramClient(StringSession(session_str), api_id, api_hash, system_version="4.16.30-vxCUSTOM")
+    client.session.set_dc(2, config.telegram_client_server, config.telegram_client_port)
 
     async with client:
 
-        async with client.conversation(config.bot_chat_name, timeout=5) as conv:
+        async with client.conversation(config.bot_chat_name, timeout=15) as conv:
             yield conv
 
 @fixture(scope="module")
@@ -59,15 +73,15 @@ async def client():
         yield client
 
 
-@pytest.fixture(scope='session')
-def event_loop():
-    """
-    Creates an instance of the default event loop for the test session.
-    """
-    policy = asyncio.get_event_loop_policy()
-    loop = policy.new_event_loop()
-    yield loop
-    loop.close()
+# @pytest.fixture(scope='session')
+# def event_loop():
+#     """
+#     Creates an instance of the default event loop for the test session.
+#     """
+#     policy = asyncio.get_event_loop_policy()
+#     loop = policy.new_event_loop()
+#     yield loop
+#     loop.close()
 
 
 @pytest.fixture(scope="session")
