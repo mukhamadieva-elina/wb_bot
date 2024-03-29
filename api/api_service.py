@@ -46,9 +46,15 @@ def get_image(number) -> str:
         basket = '11'
     elif 1656 <= _short_id <= 1919:
         basket = '12'
-    else:
+    elif 1920 <= _short_id <= 2045:
         basket = '13'
-    return f"https://basket-{basket}.wb.ru/vol{number // 100000}/part{number // 1000}/{number}/images/big/{1}.webp"
+    elif 2046 <= _short_id <= 2189:
+        basket = '14'
+    elif 2091 <= _short_id <= 2405:
+        basket = '15'
+    else:
+        basket = '16'
+    return f"https://basket-{basket}.wbbasket.ru/vol{number // 100000}/part{number // 1000}/{number}/images/big/{1}.webp"
 
 
 async def get_price_history(number):

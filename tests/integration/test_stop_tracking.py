@@ -2,10 +2,12 @@ import pytest
 from pytest_mock import MockerFixture
 from telethon.tl.custom.message import Message
 
+from tests.integration import constants
+
 
 @pytest.mark.asyncio(scope="module")
 async def test_stop_tracking(start_bot, conv, mocker: MockerFixture, user_product_item_1, user_product_item_2):
-    link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
+    link_example = constants.link_example
     mocker.patch("db.user_service.UserService.get_user_products",
                  return_value=[user_product_item_1, user_product_item_2])
     mocker.patch('api.api_service.get_image', return_value=link_example)

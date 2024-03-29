@@ -12,7 +12,7 @@ from tests.integration import constants
 async def test_price_diagram(start_bot, conv, mocker: MockerFixture, user_product_item_1):
     await conv.send_message("/start")
     await conv.get_response()
-    link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
+    link_example = constants.link_example
     mocker.patch("db.user_service.UserService.get_user_products",
                  return_value=[user_product_item_1])
     mocker.patch('api.api_service.get_image', return_value=link_example)

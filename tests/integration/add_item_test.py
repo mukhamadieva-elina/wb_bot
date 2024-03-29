@@ -13,7 +13,7 @@ async def test_add_item_exists_available_not_in_user_base(start_bot, conv, mocke
     await conv.send_message("➕ Добавить товар")
     resp_input_item: Message = await conv.get_response()
     reply_input_item: ReplyInlineMarkup = resp_input_item.reply_markup
-    link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
+    link_example = constants.link_example
     mocker.patch("utils.validate_articul", return_value=True)
     mocker.patch('utils.exist_in_api', return_value=True)
     mocker.patch('db.product_service.ProductService.get_product', return_value=product_item)
