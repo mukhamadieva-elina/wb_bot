@@ -3,6 +3,7 @@ import os
 
 load_dotenv()
 
+# TOKEN = os.getenv("TOKEN")
 TOKEN = os.getenv("TOKEN")+"/test"
 bd_pass = os.getenv("bd_pass")
 api_id = os.getenv("api_id")

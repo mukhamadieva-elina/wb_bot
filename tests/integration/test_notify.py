@@ -28,7 +28,7 @@ async def test_notify_now_aval(mocker: MockerFixture, connection, client, user_p
     mocker.patch("db.product_service.ProductService.get_product", return_value=product_item_notifier_not_aval)
     mocker.patch("db.product_service.ProductService.get_user_products_by_product",
                  return_value=[user_product_item_notifier_not_aval])
-    link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
+    link_example = constants.link_example
     mocker.patch('api.api_service.get_image', return_value=link_example)
     mocker.patch("db.product_service.ProductService.patch_product", return_value=product_item_notifier_not_aval)
 
@@ -59,7 +59,7 @@ async def test_notify_now_not_aval(mocker: MockerFixture, connection, client, us
     mocker.patch("db.product_service.ProductService.get_product", return_value=product_item_notifier_not_aval)
     mocker.patch("db.product_service.ProductService.get_user_products_by_product",
                  return_value=[user_product_item_notifier_not_aval])
-    link_example = 'https://basket-05.wbbasket.ru/vol815/part81575/81575967/images/big/2.webp'
+    link_example = constants.link_example
     mocker.patch('api.api_service.get_image', return_value=link_example)
     mocker.patch("db.product_service.ProductService.patch_product", return_value=product_item_notifier_not_aval)
 
